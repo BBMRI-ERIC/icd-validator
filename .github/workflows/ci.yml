@@ -63,7 +63,8 @@ jobs:
           ARTIFACT_VERSION: ${{  github.ref_name }}
 
       - name: Deploy to Maven Central
-        run: mvn clean deploy -P release -B -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }}
+        run: |
+         mvn clean deploy -P release -B -Dgpg.passphrase="${{ secrets.GPG_PASSPHRASE }}"
         env:
           OSSRH_USERNAME: ${{ secrets.USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.TOKEN }}
