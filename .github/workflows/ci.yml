@@ -58,6 +58,6 @@ jobs:
           ARTIFACT_VERSION: ${{  github.ref_name }}
 
       - name: Publish package
-        run: mvn -f backend --batch-mode deploy
+        run: mvn --batch-mode deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
