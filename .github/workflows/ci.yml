@@ -35,7 +35,7 @@ jobs:
 
   publish-jar:
     if: github.event_name == 'push' && github.ref_type == 'tag'
-    name: Publish JAR file
+    name: Publish JAR to Maven Central
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -51,13 +51,19 @@ jobs:
           java-version: '${{ env.JAVA_VERSION }}'
           distribution: 'temurin'
           cache: maven
+          server-id: ossrh                         # <- maps to <server><id>ossrh</id></server>
+          server-username: USERNAME         # <- GitHub secret
+          server-password: PASSWORD         # <- GitHub secret
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
 
-      - name: Publish package
+      - name: Set version
         run: mvn --quiet -B versions:set -DnewVersion="${ARTIFACT_VERSION//v}"
         env:
           ARTIFACT_VERSION: ${{  github.ref_name }}
 
-      - name: Publish package
-        run: mvn --batch-mode deploy
+      - name: Deploy to Maven Central
+        run: mvn clean deploy -P release -B -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OSSRH_USERNAME: ${{ secrets.USERNAME }}
+          OSSRH_PASSWORD: ${{ secrets.TOKEN }}
