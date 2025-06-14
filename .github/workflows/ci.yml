@@ -55,7 +55,7 @@ jobs:
           server-username: MAVEN_USERNAME         # <- GitHub secret
           server-password: MAVEN_PASSWORD         # <- GitHub secret
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Set version
         run: mvn --quiet -B versions:set -DnewVersion="${ARTIFACT_VERSION//v}"
@@ -68,4 +68,4 @@ jobs:
         env:
           MAVEN_USERNAME: ${{ secrets.USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.TOKEN }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          MAVEN_GPG_PASSPHRASE: "${{ secrets.GPG_PASSPHRASE }}"
