@@ -1,0 +1,63 @@
+name: CI/CD pipeline
+env:
+  JAVA_VERSION: '21'
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 10 * * *' # every day at 10am
+  push:
+    branches:
+      - master
+    tags:
+      - 'v*.*.*'
+  pull_request:
+permissions: read-all
+
+jobs:
+  unit-tests:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout codebase
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4
+        with:
+          java-version: '${{ env.JAVA_VERSION }}'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Run unit tests
+        run: mvn --quiet clean test -B --file pom.xml
+
+  publish-jar:
+    if: github.event_name == 'push' && github.ref_type == 'tag'
+    name: Publish JAR file
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    needs:
+      - unit-tests
+    steps:
+      - name: Checkout codebase
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4
+        with:
+          java-version: '${{ env.JAVA_VERSION }}'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Publish package
+        run: mvn -f backend --quiet -B versions:set -DnewVersion="${ARTIFACT_VERSION//v}"
+        env:
+          ARTIFACT_VERSION: ${{  github.ref_name }}
+
+      - name: Publish package
+        run: mvn -f backend --batch-mode deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
