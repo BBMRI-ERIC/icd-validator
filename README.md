@@ -2,7 +2,17 @@
 # ICD Validator
 A simple Java library for validating ICD codes.
 ## Status
-Currently only supports ICD-10 codes
+Currently only supports validation of ICD-10 codes
+## Installation
+To use with Maven add the following dependency to your `pom.xml`
+```xml
+<dependency>
+    <groupId>eu.bbmri_eric</groupId>
+    <artifactId>icd-validator</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
+
 ## Usage
 
 ```java
