@@ -8,7 +8,7 @@ Currently only supports validation of ICD-10 codes
 To use with Maven add the following dependency to your `pom.xml`
 ```xml
 <dependency>
-    <groupId>eu.bbmri_eric</groupId>
+    <groupId>eu.bbmri-eric</groupId>
     <artifactId>icd-validator</artifactId>
     <version>1.0.0</version>
 </dependency>
