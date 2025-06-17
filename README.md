@@ -1,3 +1,4 @@
+![Maven](https://img.shields.io/badge/apachemaven-C71A36.svg?style=for-the-badge&logo=apachemaven&logoColor=white)
 [![CI/CD pipeline](https://github.com/BBMRI-ERIC/icd-validator/actions/workflows/ci.yml/badge.svg)](https://github.com/BBMRI-ERIC/icd-validator/actions/workflows/ci.yml)
 # ICD Validator
 A simple Java library for validating ICD codes.
